@@ -39,7 +39,7 @@ void i2c_write(uint8_t addr, uint8_t cmd, uint8_t *buf, uint8_t len) {
 #define VKL_I2C_ADDR 0x7c
 
 #define VKL_command(cmd) do { \
-    _VKL_i2c_write(VKL_I2C_ADDR, cmd, NULL, 0); \
+    _VKL_i2c_write(VKL_I2C_ADDR, (cmd), NULL, 0); \
 } while(0)
 
 #define VKL_MODE_SET_DISPLAY_OFF (0<<3)
@@ -47,7 +47,7 @@ void i2c_write(uint8_t addr, uint8_t cmd, uint8_t *buf, uint8_t len) {
 #define VKL_MODE_SET_1_3_BIAS (0<<2)
 #define VKL_MODE_SET_1_2_BIAS (1<<2)
 
-#define VKL_cmd_mode_set(display, bias) VKL_command(0b11000000|(((display)|(bias))&0x00001100))
+#define VKL_cmd_mode_set(display, bias) VKL_command(0b11000000|(((display)|(bias))&0b00001100))
 
 #define VKL_DISCTL_FR_80 (0<<3)
 #define VKL_DISCTL_FR_71 (1<<3)
