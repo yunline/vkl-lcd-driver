@@ -14,24 +14,22 @@ Supported chips:
 #include <stdint.h> // uint8_t
 #include <stddef.h> // NULL
 
-#ifndef _VKL_i2c_write
-#error "Please define _VKL_i2c_write() before including vkl_driver.h"
+#ifndef _VKL_port_i2c_write
+#error "Please define _VKL_port_i2c_write() before including vkl_driver.h"
 #endif
 
 /*
-// Example psudo code of a good _VKL_i2c_write() implementation
+// Example psudo code of a good _VKL_port_i2c_write() implementation
 
-#define _VKL_i2c_write i2c_write
+#define _VKL_port_i2c_write i2c_write
 
 void i2c_write(uint8_t addr, uint8_t cmd, uint8_t *buf, uint8_t len) {
     i2c_start();
     i2c_send_addr(addr);
-
-    i2c_send(&cmd, 1);
-    if (len) {
-        i2c_send(buf, len);
+    i2c_send_byte(cmd);
+    for (uint8_t i=0;i<len;i++) {
+        i2c_send_byte(buf[i]);
     }
-
     i2c_stop();
 }
 */
@@ -39,7 +37,7 @@ void i2c_write(uint8_t addr, uint8_t cmd, uint8_t *buf, uint8_t len) {
 #define VKL_I2C_ADDR 0x7c
 
 #define VKL_command(cmd) do { \
-    _VKL_i2c_write(VKL_I2C_ADDR, (cmd), NULL, 0); \
+    _VKL_port_i2c_write(VKL_I2C_ADDR, (cmd), NULL, 0); \
 } while(0)
 
 #define VKL_MODE_SET_DISPLAY_OFF (0<<3)
@@ -92,7 +90,7 @@ void i2c_write(uint8_t addr, uint8_t cmd, uint8_t *buf, uint8_t len) {
         addr_msb = VKL_ICSET_AD_MSB_1; \
     } \
     VKL_cmd_icset(VKL_ICSET_OSC_INT, VKL_ICSET_NO_RESET, addr_msb); \
-    _VKL_i2c_write(VKL_I2C_ADDR, addr&0b00011111, p_buf, len); \
+    _VKL_port_i2c_write(VKL_I2C_ADDR, addr&0b00011111, p_buf, len); \
 } while(0)
 
 #endif
